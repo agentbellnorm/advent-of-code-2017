@@ -89,8 +89,6 @@
   (not (apply = (map #(-> (tree-sum tree %)) (get-children tree root-name))))
     )
 
-(get-unbalanced-child (prepare-input dev-input) "ugml")
-
 (defn get-unbalanced-child
   {:test #(do
             (is (= (get-unbalanced-child (prepare-input dev-input) "tknk") "ugml"))
@@ -106,10 +104,10 @@
      )
   )
 
-(defn get-cornrect-weight-of-faulty-program
+(defn get-correct-weight-of-faulty-program
   {:test #(do
-            (is (= (get-cornrect-weight-of-faulty-program (prepare-input dev-input)) 60))
-            (is (= (get-cornrect-weight-of-faulty-program (prepare-input input)) 521))
+            (is (= (get-correct-weight-of-faulty-program (prepare-input dev-input)) 60))
+            (is (= (get-correct-weight-of-faulty-program (prepare-input input)) 521))
             )
    }
   [tree]
