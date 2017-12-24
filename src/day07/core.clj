@@ -111,16 +111,17 @@
             )
    }
   [tree]
-  (let [child-weights (map #(-> (tree-sum tree %)) (get-children tree (get-root tree)))]
-
-    (loop [root-name (get-root tree)
-           siblings-weight 0]
-      (if (not (has-unbalanced-child tree root-name))
-        (- (get-weight tree root-name) (- (max siblings-weight (tree-sum tree root-name)) (min siblings-weight (tree-sum tree root-name))))
-        (recur
-          (get-unbalanced-child tree root-name)
-          (tree-sum tree (first (difference (get-children tree root-name) #{(get-unbalanced-child tree root-name)})))
-          )
+  (loop [root-name (get-root tree)
+         siblings-weight 0]
+    (if (not (has-unbalanced-child tree root-name))
+      (- (get-weight tree root-name)
+         (- (max siblings-weight (tree-sum tree root-name))
+            (min siblings-weight (tree-sum tree root-name))))
+      (recur
+        (get-unbalanced-child tree root-name)
+        (tree-sum tree (first (difference
+                                (get-children tree root-name)
+                                #{(get-unbalanced-child tree root-name)})))
         )
       )
     )
