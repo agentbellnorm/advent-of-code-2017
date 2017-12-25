@@ -42,19 +42,6 @@
        )
   )
 
-(defn total-score-private
-  [[node & nodes] nextlevel acc level]
-  (cond
-    (not (empty? node))
-      (recur nodes (concat nextlevel node) (+ acc level) level)
-    node
-      (recur nodes nextlevel (+ acc level) level)
-    (and (not node) (not (empty? nextlevel)))
-      (recur nextlevel [] acc (inc level))
-    :else acc
-    )
-  )
-
 (defn total-score
   {:test #(do
             (is (= (total-score (prepare-input "{}")) 1))
@@ -69,7 +56,20 @@
             )
    }
   [input]
-  (total-score-private input [] 0 1)
+  (loop [[node & nodes] input
+         next-level []
+         acc 0
+         level 1]
+    (cond
+      (not (empty? node))
+        (recur nodes (concat next-level node) (+ acc level) level)
+      node
+        (recur nodes next-level (+ acc level) level)
+      (and (not node) (not (empty? next-level)))
+        (recur next-level [] acc (inc level))
+      :else acc
+      )
+    )
   )
 
 (defn garbage-count
@@ -81,7 +81,7 @@
             (is (= (garbage-count "<!!>") 0))
             (is (= (garbage-count "<!!!>>") 0))
             (is (= (garbage-count "<{o\"i!a,<{i<a>") 10))
-            (is (= (garbage-count input) 9495))
+            (is (= (garbage-count input) 9495)) ; second answer
             )
    }
   [input]
