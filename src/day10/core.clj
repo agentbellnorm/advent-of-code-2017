@@ -81,21 +81,21 @@
     )
   )
 
-(defn knot-hash
+(defn knot-hash-256
   {:test #(do
-            (is (= (knot-hash "" 256) "a2582a3a0e66e6e86e3812dcb672a272"))
-            (is (= (knot-hash "AoC 2017" 256) "33efeb34ea91902bb2f59c9920caa6cd"))
-            (is (= (knot-hash "1,2,3" 256) "3efbe78a8d82f29979031a4aa0b16a9d"))
-            (is (= (knot-hash "1,2,4" 256) "63960835bcdc130f0b66d7ff4f6a5a8e"))
-            (is (= (knot-hash input 256) "a7af2706aa9a09cf5d848c1e6605dd2a")) ;second answer
+            (is (= (knot-hash-256 "") "a2582a3a0e66e6e86e3812dcb672a272"))
+            (is (= (knot-hash-256 "AoC 2017") "33efeb34ea91902bb2f59c9920caa6cd"))
+            (is (= (knot-hash-256 "1,2,3") "3efbe78a8d82f29979031a4aa0b16a9d"))
+            (is (= (knot-hash-256 "1,2,4") "63960835bcdc130f0b66d7ff4f6a5a8e"))
+            (is (= (knot-hash-256 input) "a7af2706aa9a09cf5d848c1e6605dd2a")) ;second answer
             )}
-  [input sequence-size]
+  [input]
   (->> input
        (map int)
        (#(-> (concat % [17 31 73 47 23])))
        (repeat 64)
        (reduce concat [])                                   ;prepared input
-       (#(-> (tie-knot % sequence-size)))                   ;sparse hash
+       (#(-> (tie-knot % 256)))                             ;sparse hash
        (partition 16)
        (map #(-> (apply bit-xor %)))                        ;dense hash
        (map #(-> (format "%02x" %)))
