@@ -1,7 +1,7 @@
 (ns day10.core
   (:require
     [clojure.test :refer :all]
-    [clojure.string :refer :all]
+    [clojure.string :refer [split]]
     ))
 
 (def input "34,88,2,222,254,93,150,0,199,255,39,32,137,136,1,167")
@@ -22,11 +22,10 @@
             (is (= (circular-subvector [1 2 3] 1 0) []))
             )}
   [vector start-index subvector-length]
-  (cond
-    (< (+ start-index subvector-length) (count vector)) (subvec vector start-index (+ start-index subvector-length))
-    :else (concat (subvec vector start-index (count vector)) (subvec vector 0 (mod (+ start-index subvector-length) (count vector))))
+  (if (< (+ start-index subvector-length) (count vector))
+      (subvec vector start-index (+ start-index subvector-length))
+      (concat (subvec vector start-index (count vector)) (subvec vector 0 (mod (+ start-index subvector-length) (count vector))))
     )
-
   )
 
 (defn reverse-circular-subvector
@@ -36,8 +35,8 @@
             (is (= (reverse-circular-subvector [4 3 0 1 2] 3 4) [2 1 0 3 4]))
             )
    }
-  [vector start-index length]
-  (let [reverse-subvector (clojure.core/reverse (circular-subvector vector start-index length))]
+  [vector start-index subvector-length]
+  (let [reverse-subvector (reverse (circular-subvector vector start-index subvector-length))]
     (loop [modification-vector vector
            [number & numbers] reverse-subvector
            current-index start-index]

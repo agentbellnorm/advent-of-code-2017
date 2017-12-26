@@ -3,7 +3,7 @@
 (ns day09.core
   (:require
     [clojure.test :refer :all]
-    [clojure.string :refer :all]
+    [clojure.string :refer [replace]]
     [clojure.set :refer [union]]
     ))
 
@@ -16,7 +16,7 @@
                )
    }
   [input]
-  (clojure.string/replace input #"\!." "")
+  (replace input #"\!." "")
        )
 
 (defn remove-garbage
@@ -28,16 +28,16 @@
             (is (= (remove-garbage "{<{},{},{{}}>}") "{}"))
             )}
   [input]
-  (clojure.string/replace input #"<.*?>" ""))
+  (replace input #"<.*?>" ""))
 
 (defn prepare-input
   [input]
   (->> input
        remove-ignores
        remove-garbage
-       (#(-> (clojure.string/replace % #"," " ")))
-       (#(-> (clojure.string/replace % #"\{" "[")))
-       (#(-> (clojure.string/replace % #"\}" "]")))
+       (#(-> (replace % #"," " ")))
+       (#(-> (replace % #"\{" "[")))
+       (#(-> (replace % #"\}" "]")))
        (#(-> [(read-string %)]))
        )
   )
