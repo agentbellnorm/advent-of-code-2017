@@ -1,3 +1,5 @@
+;inspiration from https://www.redblobgames.com/grids/hexagons/
+
 (ns day11.core
   (:require
     [clojure.test :refer :all]
