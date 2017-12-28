@@ -12,16 +12,14 @@
   [input]
   (->> (split input #"\n")
        (map #(-> (let [row (split % #" <-> ")]
-                   {(first row) (set (split (second row) #", "))}
-                   )))
+                   {(first row) (set (split (second row) #", "))} )))
        (reduce into {})))
 
 (defn group
   {:test #(do
             (is (= (count (group "0" (parse-input dev-input))) 6))
             (is (= (group "0" (parse-input dev-input)) #{"0" "2" "3" "4" "5" "6"}))
-            (is (= (count (group "0" (parse-input input))) 113)) ;first answer
-            )}
+            (is (= (count (group "0" (parse-input input))) 113)))} ;first answer
   [villager village]
   (loop [[current & to-visit] [villager]
          visited #{}]
@@ -34,8 +32,7 @@
 (defn number-of-groups
   {:test #(do
             (is (= (number-of-groups (parse-input dev-input)) 2))
-            (is (= (number-of-groups (parse-input input)) 202)) ;second answer
-            )}
+            (is (= (number-of-groups (parse-input input)) 202)))} ;second answer
   [village]
     (loop [remaining-villagers (set (keys village))
            groups []]
