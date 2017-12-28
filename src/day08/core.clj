@@ -10,8 +10,7 @@
 
 (defn init-registry
   {:test #(do
-            (is (= (init-registry dev-input) {:a 0 :b 0 :c 0}))
-            )}
+            (is (= (init-registry dev-input) {:a 0 :b 0 :c 0})))}
   [input]
   (->> input
        (#(-> (split % #"\n")))
@@ -19,21 +18,16 @@
        (map first)
        (distinct)
        (map #(-> {(keyword %) 0}))
-       (reduce union #{})
-       )
-  )
+       (reduce union #{})))
 
 (defn apply-function-string-to-value
   {:test #(do
             (is (= (apply-function-string-to-value "inc" 1 2) 3))
-            (is (= (apply-function-string-to-value "dec" 1 2) -1))
-            )}
+            (is (= (apply-function-string-to-value "dec" 1 2) -1)))}
   [function to-be-modified modification-value]
   (cond
     (= "inc" function) (+ to-be-modified modification-value)
-    (= "dec" function) (- to-be-modified modification-value)
-    )
-  )
+    (= "dec" function) (- to-be-modified modification-value)))
 
 (defn apply-condition-string-to-values
   {:test #(do
@@ -42,9 +36,7 @@
             (is (= (apply-condition-string-to-values ">=" 3 0) true))
             (is (= (apply-condition-string-to-values "<=" 3 0) false))
             (is (= (apply-condition-string-to-values ">" 1 0) true))
-            (is (= (apply-condition-string-to-values "<" 1 0) false))
-            )
-   }
+            (is (= (apply-condition-string-to-values "<" 1 0) false)))}
   [condition a b]
   (cond
     (= "==" condition) (= a b)
@@ -52,9 +44,7 @@
     (= "<=" condition) (<= a b)
     (= ">=" condition) (>= a b)
     (= ">" condition) (> a b)
-    (= "<" condition) (< a b)
-    )
-  )
+    (= "<" condition) (< a b)))
 
 (defn perform-instruction
   {:test #(do
@@ -63,35 +53,25 @@
             (is (= (perform-instruction (init-registry dev-input) "c inc 100 if b != 50") {:a 0 :b 0 :c 100}))
             (is (= (perform-instruction (init-registry dev-input) "b inc 100 if b >= 50") {:a 0 :b 0 :c 0}))
             (is (= (perform-instruction (init-registry dev-input) "c dec 100 if b >= -10") {:a 0 :b 0 :c -100}))
-            (is (= (perform-instruction (init-registry dev-input) "a dec 100 if b <= 10") {:a -100 :b 0 :c 0}))
-            )
-   }
+            (is (= (perform-instruction (init-registry dev-input) "a dec 100 if b <= 10") {:a -100 :b 0 :c 0})))}
   [registry instruction]
-  (let [
-        register-to-modify (keyword (nth (split instruction #" ") 0))
+  (let [register-to-modify (keyword (nth (split instruction #" ") 0))
         function (nth (split instruction #" ") 1)
         modification-value (read-string (nth (split instruction #" ") 2))
         register-to-check (nth (split instruction #" ") 4)
         condition (nth (split instruction #" ") 5)
-        condition-value (read-string (nth (split instruction #" ") 6))
-        ]
+        condition-value (read-string (nth (split instruction #" ") 6))]
     (if (apply-condition-string-to-values condition (get registry (keyword register-to-check)) condition-value)
       (assoc
         registry
         register-to-modify
-        (apply-function-string-to-value function (get registry register-to-modify) modification-value)
-        )
-      registry
-      )
-    )
-  )
+        (apply-function-string-to-value function (get registry register-to-modify) modification-value))
+        registry)))
 
 (defn max-val-after-run
   {:test #(do
             (is (= (max-val-after-run dev-input) 1))
-            (is (= (max-val-after-run input) 3880))
-            )
-   }
+            (is (= (max-val-after-run input) 3880)))}
   [instructions]
   (loop [registry (init-registry instructions)
          instructions (split instructions #"\n")]
@@ -99,16 +79,12 @@
       (apply max (vals registry))
       (recur
         (perform-instruction registry (first instructions))
-        (drop 1 instructions)
-        ))
-    )
-  )
+        (drop 1 instructions)))))
 
 (defn max-value-seen
   {:test #(do
             (is (= (max-value-seen dev-input) 10))
-            (is (= (max-value-seen input) 5035))
-            )}
+            (is (= (max-value-seen input) 5035)))}
   [instructions]
   (loop [registry (init-registry instructions)
          instructions (split instructions #"\n")
@@ -118,8 +94,4 @@
       (recur
         (perform-instruction registry (first instructions))
         (drop 1 instructions)
-        (conj largest-in-run (apply max (vals registry)))
-        )
-      )
-    )
-  )
+        (conj largest-in-run (apply max (vals registry)))))))

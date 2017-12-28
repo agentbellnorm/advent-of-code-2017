@@ -20,8 +20,7 @@
             (is (number-is-in-correct-circle? 81 9))
             (is (number-is-in-correct-circle? 80 7))
             (is (not (number-is-in-correct-circle? 82 3)))
-            (is (not (number-is-in-correct-circle? 10 1)))
-            )}
+            (is (not (number-is-in-correct-circle? 10 1))))}
   [number base]
   (and (> number 2)) (<= number (exp (+ base 2) 2)))
 
@@ -45,8 +44,7 @@
             (is (= (get-side-length 50) 9))
             (is (= (get-side-length 80) 9))
             (is (= (get-side-length 81) 9))
-            (is (= (get-side-length 82) 11))
-            )}
+            (is (= (get-side-length 82) 11)))}
   [number]
   (get-side-length-internal number 1))
 
@@ -79,13 +77,9 @@
 (defn get-cross-numbers
   {:test #(do
             (is (= (get-cross-numbers 10 ) #{23 15 19 11}))
-            (is (= (get-cross-numbers 8 ) #{8 6 4 2}))
-            )}
+            (is (= (get-cross-numbers 8 ) #{8 6 4 2})))}
   [number]
-  (into #{}
-        (map (fn[corner] (- corner (/ (dec (get-side-length number)) 2))) (get-four-corners number))
-        )
-  )
+  (into #{} (map (fn[corner] (- corner (/ (dec (get-side-length number)) 2))) (get-four-corners number))))
 
 ;; get the cross values of one number
 
@@ -99,8 +93,8 @@
             (is (= (get-smallest-distance 49) 3))
             )}
   [number]
-  (apply min (map (fn[cross] (Math/abs(- cross number))) (get-cross-numbers number)))
-  )
+  (apply min (map (fn[cross] (Math/abs(- cross number))) (get-cross-numbers number))))
+
 ;;Get the smallest distance from the number to a cross value
 
 (defn get-distance
@@ -114,8 +108,6 @@
   [number]
   (+
     (/ (dec (get-side-length number)) 2)
-    (get-smallest-distance number)
-    )
-)
+    (get-smallest-distance number)))
 
 ;;Get distance from number to middle

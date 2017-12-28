@@ -10,9 +10,7 @@
   [input]
   (->> input
        (#(-> (split % #",")))
-       (map read-string)
-       )
-  )
+       (map read-string)))
 
 (defn circular-subvector
   {:test #(do
@@ -24,17 +22,13 @@
   [vector start-index subvector-length]
   (if (< (+ start-index subvector-length) (count vector))
       (subvec vector start-index (+ start-index subvector-length))
-      (concat (subvec vector start-index (count vector)) (subvec vector 0 (mod (+ start-index subvector-length) (count vector))))
-    )
-  )
+      (concat (subvec vector start-index (count vector)) (subvec vector 0 (mod (+ start-index subvector-length) (count vector))))))
 
 (defn reverse-circular-subvector
   {:test #(do
             (is (= (reverse-circular-subvector [1 2 3] 0 3) [3 2 1]))
             (is (= (reverse-circular-subvector [1 2 3] 1 2) [1 3 2]))
-            (is (= (reverse-circular-subvector [4 3 0 1 2] 3 4) [2 1 0 3 4]))
-            )
-   }
+            (is (= (reverse-circular-subvector [4 3 0 1 2] 3 4) [2 1 0 3 4])))}
   [vector start-index subvector-length]
   (let [reverse-subvector (reverse (circular-subvector vector start-index subvector-length))]
     (loop [modification-vector vector
@@ -45,12 +39,7 @@
         (recur
           (assoc modification-vector (mod current-index (count vector)) number)
           numbers
-          (inc current-index)
-          )
-        )
-      )
-    )
-  )
+          (inc current-index))))))
 
 (defn multiply-first-two-elements
   [seq]
@@ -60,7 +49,6 @@
   {:test #(do
             (is (= (multiply-first-two-elements (tie-knot [3 4 1 5] 5)) 12))
             (is (= (multiply-first-two-elements (tie-knot (number-vector input) 256))) 54675) ; first answer
-
             )}
   [lengths sequence-size]
   (loop
@@ -74,11 +62,7 @@
         lengths
         (reverse-circular-subvector number-list current-pos length)
         (mod (+ length skip-size current-pos) sequence-size)
-        (inc skip-size)
-        )
-      )
-    )
-  )
+        (inc skip-size)))))
 
 (defn knot-hash-256
   {:test #(do
@@ -98,6 +82,4 @@
        (partition 16)
        (map #(-> (apply bit-xor %)))                        ;dense hash
        (map #(-> (format "%02x" %)))
-       (apply str)                                          ;knot-hash
-       )
-  )
+       (apply str)))                                        ;knot-hash

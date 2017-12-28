@@ -14,9 +14,7 @@
        (map #(-> (let [row (split % #" <-> ")]
                    {(first row) (set (split (second row) #", "))}
                    )))
-       (reduce into {})
-       )
-  )
+       (reduce into {})))
 
 (defn group
   {:test #(do
@@ -31,11 +29,7 @@
       visited
       (recur
         (vec (difference (union (get village current) (set to-visit)) (union #{current} visited)))
-        (union #{current} visited)
-        )
-      )
-    )
-  )
+        (union #{current} visited)))))
 
 (defn number-of-groups
   {:test #(do
@@ -50,9 +44,4 @@
         (count groups)
         (recur
           (difference remaining-villagers current-group)
-          (conj groups current-group)
-          )
-        )
-      )
-      )
-  )
+          (conj groups current-group))))))

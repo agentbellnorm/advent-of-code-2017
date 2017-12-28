@@ -16,8 +16,7 @@
                )
    }
   [input]
-  (replace input #"\!." "")
-       )
+  (replace input #"\!." ""))
 
 (defn remove-garbage
   "ignores should be removed before calling this"
@@ -38,9 +37,7 @@
        (#(-> (replace % #"," " ")))
        (#(-> (replace % #"\{" "[")))
        (#(-> (replace % #"\}" "]")))
-       (#(-> [(read-string %)]))
-       )
-  )
+       (#(-> [(read-string %)]))))
 
 (defn total-score
   {:test #(do
@@ -52,9 +49,8 @@
             (is (= (total-score (prepare-input "{{<ab>},{<ab>},{<ab>},{<ab>}}")) 9))
             (is (= (total-score (prepare-input "{{<!!>},{<!!>},{<!!>},{<!!>}}")) 9))
             (is (= (total-score (prepare-input "{{<a!>},{<a!>},{<a!>},{<ab>}}")) 3))
-            (is (= (total-score (prepare-input input)) 21037)) ;first answer
-            )
-   }
+            (is (= (total-score (prepare-input input)) 21037)))} ;first answer
+
   [input]
   (loop [[node & nodes] input
          next-level []
@@ -67,10 +63,7 @@
         (recur nodes next-level (+ acc level) level)
       (and (not node) (not (empty? next-level)))
         (recur next-level [] acc (inc level))
-      :else acc
-      )
-    )
-  )
+      :else acc)))
 
 (defn garbage-count
   {:test #(do
@@ -81,15 +74,11 @@
             (is (= (garbage-count "<!!>") 0))
             (is (= (garbage-count "<!!!>>") 0))
             (is (= (garbage-count "<{o\"i!a,<{i<a>") 10))
-            (is (= (garbage-count input) 9495)) ; second answer
-            )
-   }
+            (is (= (garbage-count input) 9495)))}           ; second answer
   [input]
   (->> input
        remove-ignores
        (re-seq #"<.*?>")
        (map count)
        (map #(-> (- % 2)))
-       (apply +)
-    )
-  )
+       (apply +)))

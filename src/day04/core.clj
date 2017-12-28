@@ -15,15 +15,11 @@
             (is (contains-duplicates-a? ["aa" "aa"]))
             (is (not (contains-duplicates-a? ["aa" "aaa"])))
             (is (not(contains-duplicates-a? ["ba" "ab"])))
-            (is (not (contains-duplicates-a? ["abcde" "xyz" "ecdab"])))
-            )}
+            (is (not (contains-duplicates-a? ["abcde" "xyz" "ecdab"]))))}
   [word-vector]
   (not(=
         (count word-vector)
-        (count (distinct word-vector))
-        )
-      )
-  )
+        (count (distinct word-vector)))))
 
 (defn contains-duplicates-b?
   "checks if a vector of strings contain words that consist of the same letters regardless of order"
@@ -31,14 +27,11 @@
             (is (contains-duplicates-b? ["aa" "aa"]))
             (is (not (contains-duplicates-b? ["aa" "aaa"])))
             (is (contains-duplicates-b? ["ba" "ab"]))
-            (is (contains-duplicates-b? ["abcde" "xyz" "ecdab"]))
-            )}
+            (is (contains-duplicates-b? ["abcde" "xyz" "ecdab"])))}
   [word-vector]
   (not(=
     (count (map sort word-vector))
-    (count (distinct (map sort word-vector)))
-   ))
-)
+    (count (distinct (map sort word-vector))))))
 
 (defn day04-a
   "count the number of pass phrases that does not contain duplicate words"
@@ -52,13 +45,10 @@
             (is (= (day04-a "abcde fghij\nabcde xyz ecdab" contains-duplicates-b?) 1))
             (is (= (day04-a "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj" contains-duplicates-b?) 2))
             (is (= (day04-a "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj\niiii oiii ooii oooi oooo" contains-duplicates-b?) 3))
-            (is (= (day04-a "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj\niiii oiii ooii oooi oooo\noiii ioii iioi iiio" contains-duplicates-b?) 3))
-            )}
+            (is (= (day04-a "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj\niiii oiii ooii oooi oooo\noiii ioii iioi iiio" contains-duplicates-b?) 3)))}
   [phrase filter-predicate]
   (->> phrase
        (split-into-rows)
        (map (fn [row] (split-into-columns row)))
        (filter (fn [phrase] (not (filter-predicate phrase))))
-       (count)
-       )
-  )
+       (count)))

@@ -25,8 +25,7 @@
     (= direction "s") {:x (get position :x) :y (dec (get position :y)) :z (inc (get position :z))}
     (= direction "sw") {:x (dec (get position :x)) :y (get position :y) :z (inc (get position :z))}
     (= direction "nw") {:x (dec (get position :x)) :y (inc (get position :y)) :z (get position :z)}
-    )
-  )
+    ))
 
 (defn walk-path-from-origin
   {:test #(do
@@ -41,10 +40,7 @@
       (recur
         steps
         (hexagonal-step position step)
-        (conj history position)
-        ))
-    )
-  )
+        (conj history position)))))
 
 (defn hexagonal-distance-from-origin
   {:test #(do
@@ -52,8 +48,7 @@
             (is (= (hexagonal-distance-from-origin (last (walk-path-from-origin input))) 824)) ;first answer
             )}
   [position]
-  (/ (+ (Math/abs (get position :x)) (Math/abs (get position :y)) (Math/abs (get position :z))) 2)
-  )
+  (/ (+ (Math/abs (get position :x)) (Math/abs (get position :y)) (Math/abs (get position :z))) 2))
 
 (defn max-distance-from-origin
   {:test #(do
@@ -63,6 +58,4 @@
   (->> input
        (walk-path-from-origin)
        (map hexagonal-distance-from-origin)
-       (apply max)
-       )
-  )
+       (apply max)))
