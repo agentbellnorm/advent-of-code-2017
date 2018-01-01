@@ -46,42 +46,61 @@
 
 (defn caught?
   {:test #(do
-            (is (= (caught? dev-firewall 0) true))
-            (is (= (caught? dev-firewall 6) true))
-            (is (= (caught? dev-firewall 1) false))
-            (is (= (caught? dev-firewall 2) false))
-            (is (= (caught? dev-firewall 3) false))
-            (is (= (caught? dev-firewall 4) false))
-            (is (= (caught? dev-firewall 5) false))
+            (is (= (caught? dev-firewall 0 0) true))
+            (is (= (caught? dev-firewall 6 0) true))
+            (is (= (caught? dev-firewall 1 0) false))
+            (is (= (caught? dev-firewall 2 0) false))
+            (is (= (caught? dev-firewall 3 0) false))
+            (is (= (caught? dev-firewall 4 0) false))
+            (is (= (caught? dev-firewall 5 0) false))
+            (is (= (caught? dev-firewall 0 1) false))
+            (is (= (caught? dev-firewall 6 1) false))
             )}
-  [firewall clock]
+  [firewall clock wait]
   (if (nil? (get firewall clock))
     false
-      (= 0 (scaner-pos (get firewall clock) clock))))
+      (= 0 (scaner-pos (get firewall clock) (+ wait clock)))))
 
 (defn severity
   {:test #(do
-            (is (= (severity dev-firewall 0) 0))
-            (is (= (severity dev-firewall 1) 0))
-            (is (= (severity dev-firewall 2) 0))
-            (is (= (severity dev-firewall 3) 0))
-            (is (= (severity dev-firewall 4) 0))
-            (is (= (severity dev-firewall 5) 0))
-            (is (= (severity dev-firewall 6) 24))
+            (is (= (severity dev-firewall 0 0) 1))
+            (is (= (severity dev-firewall 1 0) 0))
+            (is (= (severity dev-firewall 2 0) 0))
+            (is (= (severity dev-firewall 3 0) 0))
+            (is (= (severity dev-firewall 4 0) 0))
+            (is (= (severity dev-firewall 5 0) 0))
+            (is (= (severity dev-firewall 6 0) 24))
             )}
-  [firewall clock]
+  [firewall clock wait]
   (cond
-    (caught? firewall clock) (* (get firewall clock) clock)
+    (caught? firewall clock wait) (let [severity (* (get firewall clock) clock)]
+                                      (if (zero? severity)
+                                        (inc severity)
+                                        severity))
     (nil? (get firewall clock)) 0
     :else 0))
 
 (defn trip-severity
   {:test #(do
-            (is (= (trip-severity dev-firewall) 24))
-            (is (= (trip-severity firewall) 2384))          ; first answer
+            (is (= (dec (trip-severity dev-firewall 0)) 24))  ;meh
+            (is (= (dec (trip-severity firewall 0)) 2384))          ; first answer
             )}
-  [firewall]
+  [firewall wait]
   (->> firewall
        (keys)
-       (map #(-> (severity firewall %)) )
+       (map #(-> (severity firewall % wait)) )
        (apply +)))
+
+(trip-severity dev-firewall 1)
+
+
+(defn min-wait
+  {:test #(do
+            (is (= (min-wait dev-firewall) 10))
+            (is (= (min-wait firewall) 3921270))            ;second answer
+            )}
+  [firewall]
+  (loop [wait 10]
+    (if (zero? (trip-severity firewall wait))
+      wait
+        (recur (inc wait)))))
